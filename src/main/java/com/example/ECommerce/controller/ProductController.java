@@ -4,13 +4,13 @@ import com.example.ECommerce.dto.Product.ProductRecord;
 import com.example.ECommerce.entity.Product;
 import com.example.ECommerce.service.ProductService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,5 +22,15 @@ public class ProductController {
     @PostMapping("products")
     public ResponseEntity<ProductRecord> addProduct(@RequestBody ProductRecord productRecord) {
         return new ResponseEntity<>(productService.saveProduct(productRecord), HttpStatus.CREATED);
+    }
+
+    @GetMapping("products/{id}")
+    public ResponseEntity<ProductRecord> findProductById(@PathVariable Long id) {
+        return new ResponseEntity<>(productService.findProductById(id),HttpStatus.OK);
+    }
+
+    @GetMapping("products")
+    public ResponseEntity<List<ProductRecord>> findAllProduct() {
+        return new ResponseEntity<>(productService.findAll(),HttpStatus.OK);
     }
 }
