@@ -9,18 +9,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
 @NoArgsConstructor
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Getter
+    @Setter
     private String name; // 상품이름
 
+    @Getter
+    @Setter
     private int price;  // 가격
 
+    @Getter
+    @Setter
     private int stockQuantity; // 재고 수량
 
     public Product(String name, int price, int stockQuantity){
