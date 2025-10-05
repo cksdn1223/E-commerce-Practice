@@ -17,22 +17,21 @@ import java.util.Map;
 @RestControllerAdvice   // @RestController에서 발생하는 예외를 전역적으로 처리합니다.
 public class GlobalExceptionHandler {
 
-//    /**
-//     * 리소스를 찾지 못했을 때 발생하는 사용자 지정 예외
-//     * @param ex - ResourceNotFoundException
-//     * @return 404 HttpStatus.NOT_FOUND
-//     */
-//    // @ExceptionHandler: 특정 예외 클래스를 지정하여 처리할 메소드를 정의합니다.
-//    @ExceptionHandler(ResourceNotFoundException.class)
-//    public ResponseEntity<ErrorResponseRecord> handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
-//        ErrorResponseRecord errorResponseRecord = new ErrorResponseRecord(
-//                LocalDateTime.now(),
-//                HttpStatus.NOT_FOUND.value(),
-//                "Not Found",
-//                ex.getMessage(),
-//                request.getDescription(false).replace("uri=", ""));
-//        // 구성된 에러 메시지와 함께 HTTP 404 (Not Found) 상태 코드를 응답합니다.
-//        return new ResponseEntity<>(errorResponseRecord, HttpStatus.NOT_FOUND);
-//    }
+    /**
+     * 가입하려는 유저의 이름이 이미 DB에 있을때 발생하는 예외 처리
+     * @param ex UsernameAlreadyExistsException
+     * @return 409 HttpStatus.CONFLICT
+     */
+    @ExceptionHandler(UsernameAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponseRecord> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException ex, WebRequest request) {
+        ErrorResponseRecord errorResponseRecord = new ErrorResponseRecord(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                "Conflict",
+                ex.getMessage(),
+                request.getDescription(false).replace("uri=", "")
+        );
+        return new ResponseEntity<>(errorResponseRecord, HttpStatus.CONFLICT);
+    }
 
 }
