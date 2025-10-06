@@ -1,4 +1,3 @@
 package com.example.ECommerce.dto.Product;
 
-public class ProductUpdateRecord {
-}
+public record ProductUpdateRecord(String name, Integer price, Integer stockQuantity) {}

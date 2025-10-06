@@ -1,6 +1,8 @@
 package com.example.ECommerce.controller;
 
 import com.example.ECommerce.dto.Product.ProductRecord;
+import com.example.ECommerce.dto.Product.ProductResponse;
+import com.example.ECommerce.dto.Product.ProductUpdateRecord;
 import com.example.ECommerce.entity.Product;
 import com.example.ECommerce.service.ProductService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -9,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -20,8 +24,17 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping("products")
-    public ResponseEntity<ProductRecord> addProduct(@RequestBody ProductRecord productRecord) {
-        return new ResponseEntity<>(productService.saveProduct(productRecord), HttpStatus.CREATED);
+    public ResponseEntity<ProductResponse> addProduct(@RequestBody ProductRecord productRecord) {
+        Product saveProduct = productService.saveProduct(productRecord);
+
+        // 현재 요청을 기반으로 생성된 URI를 헤더에 붙여주면 좋음
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}") // 현재 URL에 /{id}를 덧붙임
+                .buildAndExpand(saveProduct.getId()) // {id} 자리에 id값을 채움
+                .toUri(); // URI로 변환 ( /api/products/123 )
+
+        ProductResponse response = new ProductResponse(saveProduct.getId(), saveProduct.getName(), saveProduct.getPrice(), saveProduct.getStockQuantity());
+        return ResponseEntity.created(location).body(response);
     }
 
     @GetMapping("products/{id}")
@@ -32,5 +45,17 @@ public class ProductController {
     @GetMapping("products")
     public ResponseEntity<List<ProductRecord>> findAllProduct() {
         return new ResponseEntity<>(productService.findAll(),HttpStatus.OK);
+    }
+
+    @PatchMapping("products/{id}")
+    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody ProductUpdateRecord productUpdateRecord) {
+        productService.updateProduct(id, productUpdateRecord);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("products/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
     }
 }
