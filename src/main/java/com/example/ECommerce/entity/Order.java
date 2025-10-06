@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,7 +20,6 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @CreatedDate
     private LocalDateTime orderDate;
 
     @ManyToOne(fetch = FetchType.LAZY)  // N:1
@@ -27,10 +27,32 @@ public class Order {
     private AppUser appUser;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderItem> orderItems;
+    private List<OrderItem> orderItems = new ArrayList<>();
 
-    public Order(AppUser appUser, List<OrderItem> orderItems){
+    //== 생성 시점 관련 ==//
+    @PrePersist
+    public void prePersist() {
+        this.orderDate = LocalDateTime.now();
+    }
+
+    //== 연관관계 편의 메소드 ==//
+    public void setAppUser(AppUser appUser) {
         this.appUser = appUser;
-        this.orderItems = orderItems;
+        appUser.getOrders().add(this);
+    }
+
+    public void addOrderItem(OrderItem orderItem) {
+        this.orderItems.add(orderItem);
+        orderItem.setOrder(this);
+    }
+
+    //== 생성 메소드 (정적 팩토리 메소드) ==//
+    public static Order createOrder(AppUser appUser, List<OrderItem> orderItems) {
+        Order order = new Order();
+        order.setAppUser(appUser);
+        for (OrderItem orderItem : orderItems) {
+            order.addOrderItem(orderItem);
+        }
+        return order;
     }
 }

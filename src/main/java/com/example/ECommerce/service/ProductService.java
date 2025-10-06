@@ -22,7 +22,7 @@ public class ProductService {
     }
 
     //*************************
-    // API 구현 구역
+    // 로직 구현 구역
     //*************************
     public Product saveProduct(ProductRecord productRecord) {
         Product saveProduct = new Product(productRecord.name(), productRecord.price(), productRecord.stockQuantity());
@@ -47,12 +47,13 @@ public class ProductService {
 
     // 이름변경 가격변경 재고수량변경
     @Transactional
-    public void updateProduct(Long id, ProductUpdateRecord productUpdateRecord) {
+    public ProductRecord updateProduct(Long id, ProductUpdateRecord productUpdateRecord) {
         Product findProduct = findProduct(id);
         if (productUpdateRecord.name() != null) findProduct.setName(productUpdateRecord.name());
         if (productUpdateRecord.price() != null) findProduct.setPrice(productUpdateRecord.price());
         if (productUpdateRecord.stockQuantity() != null) findProduct.setStockQuantity(productUpdateRecord.stockQuantity());
         // save 없어도 Transactional 덕분에 DB에 반영됨
+        return new ProductRecord(findProduct.getName(), findProduct.getPrice(), findProduct.getStockQuantity());
     }
 
     // Delete
