@@ -1,4 +1,4 @@
-package com.example.ECommerce.dto.Order;
+package com.example.ECommerce.dto.OrderItem;
 
 import com.example.ECommerce.entity.OrderItem;
 

@@ -33,12 +33,12 @@ public class AppUserController {
     }
 
 
-    @PostMapping("users/save")
+    @PostMapping("users")
     @Operation(summary = "회원 가입", description = "새로운 사용자 계정을 생성합니다.")
     @ApiResponse(responseCode = "201", description = "회원 가입 성공")
     @ApiResponse(responseCode = "409", description = "이미 존재하는 사용자 이름")
     public ResponseEntity<AppUserRecord> saveUser(@Valid @RequestBody AccountCredentialsRecord request) {
-        return new ResponseEntity<>(appUserService.saveUser(request),HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(appUserService.saveUser(request));
     }
 
     @PatchMapping("users/changePassword")

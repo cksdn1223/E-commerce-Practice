@@ -39,17 +39,17 @@ public class ProductController {
 
     @GetMapping("products/{id}")
     public ResponseEntity<ProductRecord> findProductById(@PathVariable Long id) {
-        return new ResponseEntity<>(productService.findProductById(id),HttpStatus.OK);
+        return ResponseEntity.ok(productService.findProductById(id));
     }
 
     @GetMapping("products")
     public ResponseEntity<List<ProductRecord>> findAllProduct() {
-        return new ResponseEntity<>(productService.findAll(),HttpStatus.OK);
+        return ResponseEntity.ok(productService.findAll());
     }
 
     @PatchMapping("products/{id}")
     public ResponseEntity<ProductRecord> updateProduct(@PathVariable Long id, @RequestBody ProductUpdateRecord productUpdateRecord) {
-        return new ResponseEntity<>(productService.updateProduct(id, productUpdateRecord), HttpStatus.OK);
+        return ResponseEntity.ok(productService.updateProduct(id, productUpdateRecord));
     }
 
     @DeleteMapping("products/{id}")

@@ -30,7 +30,7 @@ public class OrderItem {
         this.orderPrice = orderPrice;
         this.quantity = quantity;
     }
-    //==생성 메소드==//
+
     public static OrderItem createOrderItem(Product product, int orderPrice, int quantity) {
         OrderItem orderItem = new OrderItem();
         orderItem.setProduct(product);
