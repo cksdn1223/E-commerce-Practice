@@ -1,7 +1,11 @@
 # ☕ Spring Boot E-Commerce Practice
 
 
-여러 테이블 간의 연관관계 매핑과 RESTful API 설계를 학습하는 것을 목표로 합니다.
+간단한 전자상거래 시스템을 구현하고, 다음과 같은 핵심 기술 및 설계 패턴을 학습하는 것을 목표로 합니다.
+
+* **엔티티 간의 연관관계 매핑 (Association Mapping)** 심층 학습
+* **RESTful API 설계 및 구현** 능력 향상
+* **JWT(JSON Web Token) 기반 인증/인가** 및 **Spring Security**를 활용한 접근 제어 구현
 
 ---
 
@@ -23,7 +27,12 @@
 - **주문 삭제**
 
  ---
-## 🎨 데이터베이스 ERM
+## 🎨 데이터베이스 모델링 (ERM)
+
+프로젝트의 데이터 구조는 다음과 같이 설계되었으며, 
+`Member` (사용자), `Product` (상품), `Order` (주문), `OrderItem` (주문 상품)
+테이블 간의 연관관계를 중점적으로 매핑하였습니다.
+
 ![ecommerceERM.png](ecommerceERM.png)
  ---
 ## 🛠️ 기술 스택
