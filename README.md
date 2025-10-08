@@ -30,7 +30,9 @@
 ## 🎨 데이터베이스 모델링 (ERM)
 
 프로젝트의 데이터 구조는 다음과 같이 설계되었으며, 
+
 `Member` (사용자), `Product` (상품), `Order` (주문), `OrderItem` (주문 상품)
+
 테이블 간의 연관관계를 중점적으로 매핑하였습니다.
 
 ![ecommerceERM.png](ecommerceERM.png)
