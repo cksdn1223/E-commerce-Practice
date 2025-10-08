@@ -64,6 +64,8 @@ public class OrderService {
     // delete
     @Transactional
     public void deleteOrderById(Long orderId) {
-        orderRepository.deleteById(orderId);
+        Order order = orderRepository.findById(orderId)
+                        .orElseThrow(()-> new ResourceNotFoundException("ID "+orderId+" 를 가진 주문내역을 찾을 수 없습니다."));
+        orderRepository.delete(order);
     }
 }

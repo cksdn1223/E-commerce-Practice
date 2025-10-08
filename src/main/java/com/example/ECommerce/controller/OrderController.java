@@ -41,14 +41,14 @@ public class OrderController {
     }
 
     @GetMapping("orders/{id}")
-    public ResponseEntity<OrderResponse> findOrderById(@PathVariable Long orderId) {
-        return ResponseEntity.ok(orderService.findOrderById(orderId));
+    public ResponseEntity<OrderResponse> findOrderById(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.findOrderById(id));
     }
 
 
     @DeleteMapping("orders/{id}")
-    public ResponseEntity<Void> deleteOrderById(@PathVariable Long orderId) {
-        orderService.deleteOrderById(orderId);
+    public ResponseEntity<Void> deleteOrderById(@PathVariable Long id) {
+        orderService.deleteOrderById(id);
         return ResponseEntity.noContent().build();
     }
 }
