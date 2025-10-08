@@ -54,6 +54,13 @@ public class OrderService {
         return OrderResponse.from(order);
     }
 
+    public List<OrderResponse> findAllOrders(String username) {
+        List<Order> orders = orderRepository.findAllByAppUser_Username(username);
+        return orders.stream()
+                .map(OrderResponse::from)
+                .toList();
+    }
+
     // delete
     @Transactional
     public void deleteOrderById(Long orderId) {

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,10 +35,16 @@ public class OrderController {
         return ResponseEntity.created(location).body(OrderResponse.from(createdOrder));
     }
 
+    @GetMapping("orders")
+    public ResponseEntity<List<OrderResponse>> findAllOrders(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(orderService.findAllOrders(userDetails.getUsername()));
+    }
+
     @GetMapping("orders/{id}")
     public ResponseEntity<OrderResponse> findOrderById(@PathVariable Long orderId) {
         return ResponseEntity.ok(orderService.findOrderById(orderId));
     }
+
 
     @DeleteMapping("orders/{id}")
     public ResponseEntity<Void> deleteOrderById(@PathVariable Long orderId) {
