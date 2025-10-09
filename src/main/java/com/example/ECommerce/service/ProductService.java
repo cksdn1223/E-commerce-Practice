@@ -31,17 +31,18 @@ public class ProductService {
 
     public ProductRecord findProductById(Long id) {
         Product findProduct = findProduct(id);
-        return new ProductRecord(findProduct.getName(), findProduct.getPrice(), findProduct.getStockQuantity());
+        return ProductRecord.from(findProduct);
+    }
+
+    public List<ProductRecord> findProductByKeyword(String keyword) {
+        return productRepository.findByNameContaining(keyword).stream()
+                .map(ProductRecord::from).toList();
     }
 
     public List<ProductRecord> findAll() {
         List<Product> findProduct = productRepository.findAll();
         return findProduct.stream()
-                .map(product ->
-                new ProductRecord(
-                        product.getName(),
-                        product.getPrice(),
-                        product.getStockQuantity()))
+                .map(ProductRecord::from)
                 .toList();
     }
 
@@ -53,7 +54,7 @@ public class ProductService {
         if (productUpdateRecord.price() != null) findProduct.setPrice(productUpdateRecord.price());
         if (productUpdateRecord.stockQuantity() != null) findProduct.setStockQuantity(productUpdateRecord.stockQuantity());
         // save 없어도 Transactional 덕분에 DB에 반영됨
-        return new ProductRecord(findProduct.getName(), findProduct.getPrice(), findProduct.getStockQuantity());
+        return ProductRecord.from(findProduct);
     }
 
     // Delete

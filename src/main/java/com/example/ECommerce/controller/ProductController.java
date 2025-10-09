@@ -6,9 +6,7 @@ import com.example.ECommerce.dto.Product.ProductUpdateRecord;
 import com.example.ECommerce.entity.Product;
 import com.example.ECommerce.service.ProductService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +43,10 @@ public class ProductController {
     }
 
     @GetMapping("products")
-    public ResponseEntity<List<ProductRecord>> findAllProduct() {
+    public ResponseEntity<List<ProductRecord>> findProducts(@RequestParam(value = "keyword", required = false) String keyword) {
+        if (keyword != null && !keyword.isBlank()) {
+            return ResponseEntity.ok(productService.findProductByKeyword(keyword));
+        }
         return ResponseEntity.ok(productService.findAll());
     }
 
