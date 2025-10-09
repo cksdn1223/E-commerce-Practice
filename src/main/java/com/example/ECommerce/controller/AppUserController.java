@@ -3,6 +3,8 @@ package com.example.ECommerce.controller;
 import com.example.ECommerce.dto.AppUser.AccountCredentialsRecord;
 import com.example.ECommerce.dto.AppUser.AppUserRecord;
 import com.example.ECommerce.dto.AppUser.ChangePasswordRecord;
+import com.example.ECommerce.entity.AppUser;
+import com.example.ECommerce.security.annotation.LoginUser;
 import com.example.ECommerce.service.AppUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -43,8 +45,8 @@ public class AppUserController {
 
     @PatchMapping("users/changePassword")
     @Operation(summary = "비밀번호 변경", description = "현재 로그인된 사용자의 비밀번호를 변경합니다.")
-    public ResponseEntity<Void> changePassword(@Valid @RequestBody ChangePasswordRecord changePasswordRecord, @AuthenticationPrincipal UserDetails userDetails){
-        appUserService.changePassword(changePasswordRecord, userDetails);
+    public ResponseEntity<Void> changePassword(@Valid @RequestBody ChangePasswordRecord changePasswordRecord, @LoginUser AppUser appuser){
+        appUserService.changePassword(changePasswordRecord, appuser);
         return ResponseEntity.ok().build();
     }
 }

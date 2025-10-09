@@ -3,8 +3,10 @@ package com.example.ECommerce.controller;
 
 import com.example.ECommerce.dto.Order.OrderRequest;
 import com.example.ECommerce.dto.Order.OrderResponse;
+import com.example.ECommerce.entity.AppUser;
 import com.example.ECommerce.entity.Order;
 import com.example.ECommerce.repository.AppUserRepository;
+import com.example.ECommerce.security.annotation.LoginUser;
 import com.example.ECommerce.service.OrderService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +28,8 @@ public class OrderController {
     private final AppUserRepository appUserRepository;
 
     @PostMapping("orders")
-    public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderRequest, @AuthenticationPrincipal UserDetails userDetails) {
-        Order createdOrder = orderService.createOrder(userDetails, orderRequest);
+    public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderRequest, @LoginUser AppUser appUser) {
+        Order createdOrder = orderService.createOrder(appUser, orderRequest);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(createdOrder.getId())
@@ -36,8 +38,8 @@ public class OrderController {
     }
 
     @GetMapping("orders")
-    public ResponseEntity<List<OrderResponse>> findAllOrders(@AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(orderService.findAllOrders(userDetails.getUsername()));
+    public ResponseEntity<List<OrderResponse>> findAllOrders(@LoginUser AppUser appUser) {
+        return ResponseEntity.ok(orderService.findAllOrders(appUser));
     }
 
     @GetMapping("orders/{id}")

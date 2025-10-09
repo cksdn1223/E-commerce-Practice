@@ -2,7 +2,9 @@ package com.example.ECommerce.controller;
 
 import com.example.ECommerce.dto.Cart.CartRecord;
 import com.example.ECommerce.dto.CartItem.CartItemRequest;
+import com.example.ECommerce.entity.AppUser;
 import com.example.ECommerce.entity.Cart;
+import com.example.ECommerce.security.annotation.LoginUser;
 import com.example.ECommerce.service.CartService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +22,13 @@ public class CartController {
     private final CartService cartService;
 
     @PostMapping("/cart")
-    public ResponseEntity<Void> addProductToCart(@RequestBody CartItemRequest request, @AuthenticationPrincipal UserDetails userDetails) {
-        cartService.addProductToCart(userDetails.getUsername(), request.productId(), request.quantity());
+    public ResponseEntity<Void> addProductToCart(@RequestBody CartItemRequest request, @LoginUser AppUser appUser) {
+        cartService.addProductToCart(appUser.getUsername(), request.productId(), request.quantity());
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/cart")
-    public ResponseEntity<CartRecord> getCart(@AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok().body(cartService.getCart(userDetails.getUsername()));
+    public ResponseEntity<CartRecord> getCart(@LoginUser AppUser appUser) {
+        return ResponseEntity.ok().body(cartService.getCart(appUser.getUsername()));
     }
 }

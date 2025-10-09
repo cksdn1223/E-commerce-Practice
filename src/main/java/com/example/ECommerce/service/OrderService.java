@@ -29,10 +29,7 @@ public class OrderService {
     //*************************
 
     @Transactional
-    public Order createOrder(UserDetails userDetails, OrderRequest orderRequest) {
-        // 사용자 조회
-        AppUser orderUser = appUserRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(()->new ResourceNotFoundException(userDetails.getUsername()+" 를 가진 유저를 찾을 수 없음"));
+    public Order createOrder(AppUser appUser, OrderRequest orderRequest) {
         // 주문 상품 목록 생성
         List<OrderItem> orderItems = new ArrayList<>();
         for (OrderItemRequest itemRequest : orderRequest.orderItems()){
@@ -42,7 +39,7 @@ public class OrderService {
         }
         // Order 생성 책임을 Order 클래스에 위임 (어려움) ************************
         // 주문 생성 및 저장
-        Order order = Order.createOrder(orderUser, orderItems);
+        Order order = Order.createOrder(appUser, orderItems);
         return orderRepository.save(order);
     }
 
@@ -54,9 +51,8 @@ public class OrderService {
         return OrderResponse.from(order);
     }
 
-    public List<OrderResponse> findAllOrders(String username) {
-        List<Order> orders = orderRepository.findAllByAppUser_Username(username);
-        return orders.stream()
+    public List<OrderResponse> findAllOrders(AppUser appUser) {
+        return appUser.getOrders().stream()
                 .map(OrderResponse::from)
                 .toList();
     }

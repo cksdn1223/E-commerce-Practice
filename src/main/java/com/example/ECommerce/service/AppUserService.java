@@ -47,15 +47,12 @@ public class AppUserService {
         else throw new UsernameAlreadyExistsException("이미 존재하는 사용자입니다: " + request.username());
     }
     @Transactional
-    public void changePassword(ChangePasswordRecord changePasswordRecord , UserDetails userDetails) {
-        // 로그인한 유저로 DB에서 정보 찾아 저장
-        AppUser loginUser = appUserRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new ResourceNotFoundException("사용자를 찾을 수 없습니다: " + userDetails.getUsername()));
+    public void changePassword(ChangePasswordRecord changePasswordRecord , AppUser appUser) {
         // 입력한 현재 패스워드랑 저장된 loginUser의 패스워드가 다르면 예외 발생
-        if(!passwordEncoder.matches(changePasswordRecord.currentPassword(), loginUser.getPassword())){
+        if(!passwordEncoder.matches(changePasswordRecord.currentPassword(), appUser.getPassword())){
             throw new AccessDeniedException("현재 비밀번호가 일치하지 않습니다.");
         }
         // 일치하다면 새로운 패스워드 암호화후 변경
-        loginUser.setPassword(passwordEncoder.encode(changePasswordRecord.newPassword()));
+        appUser.setPassword(passwordEncoder.encode(changePasswordRecord.newPassword()));
     }
 }

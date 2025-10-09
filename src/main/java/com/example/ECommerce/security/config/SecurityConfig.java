@@ -3,6 +3,7 @@ package com.example.ECommerce.security.config;
 import com.example.ECommerce.security.AuthEntryPoint;
 import com.example.ECommerce.security.AuthenticationFilter;
 import com.example.ECommerce.security.UserDetailsServiceImpl;
+import com.example.ECommerce.security.resolver.LoginUserArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,22 +24,21 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableMethodSecurity // @PreAuthorize, @PostAuthorize, @Secured 등을 활성화합니다.
-public class SecurityConfig {
+public class SecurityConfig implements WebMvcConfigurer {
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthEntryPoint exceptionHandler;
     private final AuthenticationFilter authenticationFilter;
-
-//    // 패스워드 비교하는 부분
-//    public void configGlobal (AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
-//    }
+    private final LoginUserArgumentResolver loginUserArgumentResolver;
 
     // 패스워드 암호화 시켜주는 빈
     @Bean
@@ -49,6 +49,11 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception{
         return authConfig.getAuthenticationManager();
+    }
+    // 커스텀 Argument Resolver 등록
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(loginUserArgumentResolver);
     }
 
     @Bean
