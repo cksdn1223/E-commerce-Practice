@@ -38,9 +38,14 @@ public class CartService {
         // transactional 덕분에 cart save 불필요
     }
 
+    @Transactional(readOnly = true)
     public CartRecord getCart(String username) {
         Cart cart = cartRepository.findByAppUser_Username(username)
-                .orElseThrow(()-> new ResourceNotFoundException("장바구니를 가지고 있지 않습니다."));
+                .orElseGet(() -> {
+                    AppUser appUser = appUserRepository.findByUsername(username)
+                            .orElseThrow(() -> new UsernameNotFoundException(username + " 을 가진 유저를 찾을 수 없습니다."));
+                    return Cart.createCart(appUser); // DB에 저장하지 않고, 비어있는 Cart 객체만 생성
+                });
         return CartRecord.from(cart);
     }
 }
