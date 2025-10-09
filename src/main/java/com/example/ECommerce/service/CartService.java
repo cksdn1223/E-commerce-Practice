@@ -3,15 +3,20 @@ package com.example.ECommerce.service;
 import com.example.ECommerce.dto.Cart.CartRecord;
 import com.example.ECommerce.entity.AppUser;
 import com.example.ECommerce.entity.Cart;
+import com.example.ECommerce.entity.CartItem;
 import com.example.ECommerce.entity.Product;
 import com.example.ECommerce.exception.ResourceNotFoundException;
 import com.example.ECommerce.repository.AppUserRepository;
 import com.example.ECommerce.repository.CartRepository;
 import com.example.ECommerce.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor

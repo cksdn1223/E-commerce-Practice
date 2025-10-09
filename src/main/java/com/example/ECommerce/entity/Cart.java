@@ -41,7 +41,6 @@ public class Cart {
                 .filter(item -> item.getProduct().getId().equals(product.getId()))
                 .findFirst()
                 .orElse(null);
-
         if (existingItem != null) {
             existingItem.addQuantity(quantity);
         } else {
