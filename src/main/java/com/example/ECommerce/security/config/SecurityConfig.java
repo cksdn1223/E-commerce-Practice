@@ -59,19 +59,19 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults())
-                .sessionManagement(sess -> sess.sessionCreationPolicy(
+                .csrf(AbstractHttpConfigurer::disable) // CSRF 보호 비활성화 (Stateless API 서버이므로)
+                .cors(Customizer.withDefaults()) // CORS 설정 적용
+                .sessionManagement(sess -> sess.sessionCreationPolicy( // 세션을 사용하지 않는 Stateless 정책 설정
                         SessionCreationPolicy.STATELESS
                 ))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/users/save").permitAll()
+                .authorizeHttpRequests(auth -> auth // HTTP 요청에 대한 인가 규칙 설정
+                        .requestMatchers(HttpMethod.POST, "/login").permitAll() // 로그인 API는 모두 허용
+                        .requestMatchers(HttpMethod.POST, "/api/users/save").permitAll() // 회원가입 API는 모두 허용
                         // Swagger UI와 API 문서를 위한 경로를 인증 없이 허용합니다.
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())
-                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(ex -> ex.authenticationEntryPoint(exceptionHandler))
+                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class) // JWT 인증 필터를 기본 로그인 필터 앞에 추가
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(exceptionHandler)) // 인증 예외 발생 시 처리할 핸들러 등록
                 .build();
     }
 

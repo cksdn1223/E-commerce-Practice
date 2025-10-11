@@ -14,12 +14,21 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+/**
+ * 커스텀 어노테이션인 @LoginUser를 처리하는 Argument Resolver 입니다.
+ * 컨트롤러 메소드의 파라미터에 @LoginUser 어노테이션이 있으면,
+ * 현재 인증된 사용자의 AppUser 엔티티를 찾아서 주입해주는 역할을 합니다.
+ */
 @Component
 @RequiredArgsConstructor
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final AppUserRepository appUserRepository;
 
+    /**
+     * 이 Resolver가 특정 파라미터를 지원하는지 여부를 결정합니다.
+     * &#064;LoginUser  어노테이션이 있고, 파라미터 타입이 AppUser 클래스일 때 true를 반환합니다.
+     */
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         // @LoginUser 어노테이션이 붙어 있고, 파라미터 타입이 AppUser인지 확인
@@ -27,6 +36,10 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
                 && parameter.getParameterType().equals(AppUser.class);
     }
 
+    /**
+     * supportsParameter가 true를 반환했을 때, 실제 파라미터에 주입할 객체를 반환하는 메소드입니다.
+     * SecurityContext에서 인증 정보를 가져와 DB에서 AppUser를 조회한 후 반환합니다.
+     */
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
