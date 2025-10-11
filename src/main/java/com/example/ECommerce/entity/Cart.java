@@ -1,17 +1,14 @@
 package com.example.ECommerce.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Setter
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,11 +21,15 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> cartItems = new ArrayList<>();
 
+    @Builder
+    public Cart(AppUser appUser, List<CartItem> cartItems) {
+        this.appUser = appUser;
+        this.cartItems = cartItems;
+    }
+
     //== 생성 메소드 (정적 팩토리 메소드) ==//
     public static Cart createCart(AppUser appUser) {
-        Cart cart = new Cart();
-        cart.setAppUser(appUser);
-        return cart;
+        return Cart.builder().appUser(appUser).build();
     }
 
     public void addCartItem(CartItem cartItem) {

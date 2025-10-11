@@ -32,9 +32,7 @@ public class ProductController {
                 .path("/{id}") // 현재 URL에 /{id}를 덧붙임
                 .buildAndExpand(saveProduct.getId()) // {id} 자리에 id값을 채움
                 .toUri(); // URI로 변환 ( /api/products/123 )
-
-        ProductResponse response = new ProductResponse(saveProduct.getId(), saveProduct.getName(), saveProduct.getPrice(), saveProduct.getStockQuantity());
-        return ResponseEntity.created(location).body(response);
+        return ResponseEntity.created(location).body(ProductResponse.from(saveProduct));
     }
 
     @GetMapping("products/{id}")

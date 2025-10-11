@@ -1,14 +1,11 @@
 package com.example.ECommerce.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
-@NoArgsConstructor
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,19 +22,21 @@ public class OrderItem {
     @JoinColumn(name = "order_id")
     private Order order;
 
+    @Builder
     public OrderItem(Product product, int orderPrice, int quantity) {
         this.product = product;
         this.orderPrice = orderPrice;
         this.quantity = quantity;
     }
 
+    void setOrder(Order order) {
+        this.order = order;
+    }
     public static OrderItem createOrderItem(Product product, int orderPrice, int quantity) {
-        OrderItem orderItem = new OrderItem();
-        orderItem.setProduct(product);
-        orderItem.setOrderPrice(orderPrice);
-        orderItem.setQuantity(quantity);
-
         product.removeStock(quantity); // 생성 시점에 재고 감소
-        return orderItem;
+        return OrderItem.builder()
+                .product(product)
+                .orderPrice(orderPrice)
+                .quantity(quantity).build();
     }
 }

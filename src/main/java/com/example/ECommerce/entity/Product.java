@@ -1,21 +1,20 @@
 package com.example.ECommerce.entity;
 
+import com.example.ECommerce.dto.Product.ProductUpdateRecord;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
-@NoArgsConstructor
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
 
     private String name; // 상품이름
 
@@ -23,6 +22,7 @@ public class Product {
 
     private int stockQuantity; // 재고 수량
 
+    @Builder
     public Product(String name, int price, int stockQuantity){
         this.name = name;
         this.price = price;
@@ -30,7 +30,15 @@ public class Product {
     }
 
     //== 비즈니스 로직 추가 ==//
-
+    /**
+     * 상품 정보를 업데이트하는 비즈니스 메소드.
+     * 개별 setter를 여는 대신, 의도가 명확한 단일 메소드를 제공합니다.
+     */
+    public void updateInfo(ProductUpdateRecord updateRecord) {
+        if (updateRecord.name() != null) this.name = updateRecord.name();
+        if (updateRecord.price() != null) this.price = updateRecord.price();
+        if (updateRecord.stockQuantity() != null) this.stockQuantity = updateRecord.stockQuantity();
+    }
     /**
      * 재고 수량을 증가시키는 메소드 (주문 취소 등)
      * @param quantity 증가할 수량

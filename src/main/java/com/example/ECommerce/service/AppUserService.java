@@ -53,6 +53,6 @@ public class AppUserService {
             throw new AccessDeniedException("현재 비밀번호가 일치하지 않습니다.");
         }
         // 일치하다면 새로운 패스워드 암호화후 변경
-        appUser.setPassword(passwordEncoder.encode(changePasswordRecord.newPassword()));
+        appUser.changePassword(changePasswordRecord.newPassword(), passwordEncoder);
     }
 }

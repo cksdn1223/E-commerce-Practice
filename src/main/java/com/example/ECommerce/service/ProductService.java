@@ -25,7 +25,11 @@ public class ProductService {
     // 로직 구현 구역
     //*************************
     public Product saveProduct(ProductRecord productRecord) {
-        Product saveProduct = new Product(productRecord.name(), productRecord.price(), productRecord.stockQuantity());
+        Product saveProduct = Product.builder()
+                .name(productRecord.name())
+                .price(productRecord.price())
+                .stockQuantity(productRecord.stockQuantity())
+                .build();
         return productRepository.save(saveProduct);
     }
 
@@ -50,9 +54,7 @@ public class ProductService {
     @Transactional
     public ProductRecord updateProduct(Long id, ProductUpdateRecord productUpdateRecord) {
         Product findProduct = findProduct(id);
-        if (productUpdateRecord.name() != null) findProduct.setName(productUpdateRecord.name());
-        if (productUpdateRecord.price() != null) findProduct.setPrice(productUpdateRecord.price());
-        if (productUpdateRecord.stockQuantity() != null) findProduct.setStockQuantity(productUpdateRecord.stockQuantity());
+        findProduct.updateInfo(productUpdateRecord);
         // save 없어도 Transactional 덕분에 DB에 반영됨
         return ProductRecord.from(findProduct);
     }

@@ -1,9 +1,7 @@
 package com.example.ECommerce.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -11,9 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Setter
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "orders")
 public class Order {
     @Id
@@ -36,7 +33,7 @@ public class Order {
     }
 
     //== 연관관계 편의 메소드 ==//
-    public void setAppUser(AppUser appUser) {
+    void setAppUser(AppUser appUser) {
         this.appUser = appUser;
         appUser.getOrders().add(this);
     }
@@ -49,7 +46,7 @@ public class Order {
     //== 생성 메소드 (정적 팩토리 메소드) ==//
     public static Order createOrder(AppUser appUser, List<OrderItem> orderItems) {
         Order order = new Order();
-        order.setAppUser(appUser);
+        appUser.addOrder(order);
         for (OrderItem orderItem : orderItems) {
             order.addOrderItem(orderItem);
         }

@@ -1,14 +1,11 @@
 package com.example.ECommerce.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
-@Setter
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +13,7 @@ public class CartItem {
 
     @ManyToOne(fetch = FetchType.LAZY)  // N:1
     @JoinColumn(name = "cart_id")   // 외래키 컬럼명 지정
+    @Setter
     private Cart cart;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -24,12 +22,19 @@ public class CartItem {
 
     private int quantity;
 
+    @Builder
+    public CartItem(Cart cart, Product product, int quantity) {
+        this.cart = cart;
+        this.product = product;
+        this.quantity = quantity;
+    }
+
     //== 생성 메소드 (정적 팩토리 메소드) ==//
     public static CartItem createCartItem(Product product, int quantity) {
-        CartItem cartItem = new CartItem();
-        cartItem.setProduct(product);
-        cartItem.setQuantity(quantity);
-        return cartItem;
+        return CartItem.builder()
+                .product(product)
+                .quantity(quantity)
+                .build();
     }
 
     //== 비즈니스 로직 ==//
