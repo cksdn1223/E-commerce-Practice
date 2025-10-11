@@ -45,13 +45,12 @@ public class JwtService {
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (token != null) {
             // 토큰 파싱 및 서명 검증
-            String user = Jwts.parser()
+            return Jwts.parser()
                     .verifyWith((SecretKey) key) // 서명 검증을 위해 동일한 키를 사용
                     .build()
                     .parseSignedClaims(token.replace(PREFIX, "").trim()) // 'Bearer ' 접두사와 앞뒤 공백 제거
                     .getPayload()
                     .getSubject();
-            if (user != null) return user;
         }
         return null;
     }

@@ -34,6 +34,52 @@
 `Member` (사용자), `Product` (상품), `Order` (주문), `OrderItem` (주문 상품), `Cart` (카트), `CartItem` (카트 상품)
 
 ![ecommerceERM.png](ecommerceERM.png)
+
+
+```mermaid
+erDiagram
+    AppUser ||--|| Cart : "has"
+    AppUser ||--o{ Order : "places"
+    Cart ||--o{ CartItem : "contains"
+    Product }o--|| CartItem : "is"
+    Order ||--o{ OrderItem : "contains"
+    Product }o--|| OrderItem : "is"
+
+    AppUser {
+        Long id PK
+        String username
+        String password
+        String role
+    }
+    Cart {
+        Long id PK
+        Long app_user_id FK
+    }
+    Order {
+        Long id PK
+        LocalDateTime orderDate
+        Long app_user_id FK
+    }
+    Product {
+        Long id PK
+        String name
+        int price
+        int stockQuantity
+    }
+    CartItem {
+        Long id PK
+        int quantity
+        Long cart_id FK
+        Long product_id FK
+    }
+    OrderItem {
+        Long id PK
+        int quantity
+        int orderPrice
+        Long order_id FK
+        Long product_id FK
+    }
+```
  ---
 ## 🛠️ 기술 스택
 
